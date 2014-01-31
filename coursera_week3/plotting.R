@@ -13,16 +13,32 @@ t <- table(data$State)
 #Note: t is a table with one dimension (?) (Had some trouble subsetting)
 data2 <- data[t[data$State] >= 20, ]
 
+states <- sort(unique(data2$State))
+#pre-allocate an empty list of length num states
+vec <- vector()
+for(state in states){
+	m <- median(data2[data2$State == state, 11], na.rm=TRUE)
+	vec <- c(vec, m)
+}
+
+dataframe <- data.frame(state = states, median = vec)
+#Sort data frame by column
+dataframe <- dataframe[order(dataframe[,2]), ]
+#This way works too, if sorting by name. And multiple things to sort can
+#be added //dd[with(dd, order(-z, b)), ]  OR dd[ order(-dd[,4], dd[,1]), ]
+#dataframe <- dataframe[with(dataframe, order(median)), ]
+#print(dataframe)
+
 #Basic boxplot:
-death <- data2[, 11]
-state <- data2$State
+#death <- data2[, 11]
+#state <- data2$State
 #Sets the axis lables to be perpendicular to x-axis so that they will fit
 #las = 0 = parallell (? uh, look it up)
-par(las=2)
+#par(las=2)
 # set xaxt="n" so that the boxplot won't print the x-axis 
 # as I will make some changes to it using the axis() fnc
-boxplot(death ~ state, col=rainbow(5), main="Heart Attack 30-day Death Rate by State", 
-	ylab="30-day Death Rate", cex.axis=0.7)
+#boxplot(death ~ state, col=rainbow(5), main="Heart Attack 30-day Death Rate by State", 
+#	ylab="30-day Death Rate", cex.axis=0.7)
 
 #table(data2$State)
 #max(data[,11], na.rm=TRUE)
